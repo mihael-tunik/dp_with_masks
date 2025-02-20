@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -62,6 +63,7 @@ inline int next_comb(int v) {
     return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
 }
 
+// O(n^3 2^n) time and O(2^n) space
 int min_sum_2d_dp(vector <vector <int>> &a){
     int n = a.size(), INF = 1e9;
 
@@ -69,8 +71,6 @@ int min_sum_2d_dp(vector <vector <int>> &a){
     vector <int> choice(1 << n, 0);
     vector <int> init(1 << n, 0);
     
-    //printf(":: %llu ", dp.size());
-
     init[0] = 1;
 
     for (int k = 0; k <= n; ++k) {
@@ -109,32 +109,57 @@ int min_sum_2d_dp(vector <vector <int>> &a){
                 }
             }
             
-            if(k == 0)
+            if(mask == 0)
                break;
         }
     }
 
-    printf("\nDP: %i\n", dp[(1<<n) - 1]);
+    vector <int> argmin(n,-1);
+    int mask = (1<<n)-1, state, index;
+
+    for(int k = 0; k < n; ++k){
+        for(int i = 0; i < n; ++i){
+            if (mask & (1<<i)){ 
+                state = mask & ~(1<<i);
+                index = 8 * sizeof(int) - __builtin_clz(choice[mask] - choice[state]) - 1; 
+                
+                if(dp[state] + a[i][index] == dp[mask]){
+                     mask = state;
+                     argmin[i] = index;
+                     break;    
+                }
+            }
+        }
+    }
+
+    log(dp[(1<<n) - 1], argmin, a);
     return 0;
 }
 
 int main(void){
-    int n = 12;
+    int n = 30;
     vector <vector <int>> a(n);
     
-    printf("a: \n");
+    //srand(time(NULL));
 
     for(int i = 0; i < n; ++i){
         a[i].resize(n);
-        for(int j = 0; j < n; ++j){
-            a[i][j] = 1 + rand() % 10;
-            //printf("  %3i  ", a[i][j]);
-        }
-        //printf("\n");
+        for(int j = 0; j < n; ++j)
+            a[i][j] = 1 + rand() % 50;
     }
+   
+    auto s1 = chrono::high_resolution_clock::now();
+    //min_sum_2d_naive(a);
+    auto s2 = chrono::high_resolution_clock::now();
+    
+    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);     
 
-    min_sum_2d_naive(a);
+    auto s3 = chrono::high_resolution_clock::now();
     min_sum_2d_dp(a);
+    auto s4 = chrono::high_resolution_clock::now();
+    
+    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);  
 
     return 0;
 }
+
