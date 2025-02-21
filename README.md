@@ -1,11 +1,12 @@
 DP on masks or Subset DP is a technique to decrease O(n!) complexity of algorithms.
-Here's collection of nice examples. 
+Here's my collection of nice examples. 
 
 Problem list:
 
-- max_sum 
-Given n x n chess board with numbers. 
-Place n rooks so sum on positions with maximal sum.
+- **max_sum**:
+
+> Given n x n chess board with n^2 integer numbers. 
+Place n rooks so they don't hit each other and sum of their positions would be maximal.
 
 Solution:
 
@@ -29,3 +30,5 @@ n  T (dp) T (n!)
 20 0.3s   >>
 30 500s   >>
 ```
+
+Actually it can be solved in polynomial time by one of the matching algorithms, but that's different story.
