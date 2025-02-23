@@ -1,5 +1,6 @@
 # About
-DP on masks or subset DP is a technique to decrease complexity of algorithms with permutation structure.
+DP on masks or subset DP is a technique to decrease complexity of algorithms with permutational structure.
+
 Here's my collection of nice examples. 
 
 Problem list:
@@ -23,9 +24,9 @@ Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(n \cdot 2^n)$ space.
 > Given $n$ x $n$ chess board with $n^2$ integer numbers. 
 Place $n$ rooks so they don't attack each other and sum of their positions would be maximal.
 
-Actually it can be solved in polynomial time by one of the matching algorithms, but that's different story.
+Actually it can be solved in polynomial time by one of the matching algorithms. It is surprizing because **max_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
 
-DP solution:
+Anyway, DP solution:
 
 ```
 Store two arrays: dp[2^n - 1], chosen[2^n - 1]
