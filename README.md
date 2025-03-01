@@ -4,7 +4,6 @@ DP on masks or subset DP is a technique to decrease complexity of algorithms wit
 Here's my collection of nice examples. 
 
 Problem list:
-
 ### **tsp**:
 > Given distances between cities find closed tour through all of them with minimal length.
 
@@ -49,5 +48,28 @@ n  T (dp) T (n!)
 ```
 
 ### **min_sum_3d**:
-> Given $a_{ijk}$, choose $n$ elements each on distinct xy, yz and xz planes so their sum would be minimal.
+> Given cube array $c_{ijk}$ of $n^3$ elements, choose $n$ elements each from distinct (xy, yz, xz)-planes so their sum would be minimal.
 
+Update: try optimized version of dp with command (x5 faster on my laptop)
+```
+g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
+```
+
+### More details:
+In every solution, I prefer to iterate k-subsets in following pattern:
+```
+for (int k = 0; k <= n; ++k) {
+    for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
+        // do something
+    }
+}
+```
+where next\_comb() is a following bit trick
+```
+inline int next_comb(int v) {
+    int t = v | (v - 1);
+    return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
+}
+```
+Of course for practical reasons, one can prefer any convenient way to iterate over k-subsets.
+The main thing is to follow order from subsets of size k to k+1.

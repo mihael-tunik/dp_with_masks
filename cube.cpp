@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <chrono>
+#include <cstring>
 
 using namespace std;
 
@@ -50,7 +51,7 @@ int min_sum_3d_dp(vector <vector <vector <int>>> &c){
     for(int i = 0; i < (1<<n); ++i)
         dp[i].resize(1<<n, INF);
     
-    dp[0][0] = 0;    
+    dp[0][0] = 0;
     
     for (int k = 1; k <= n; ++k)
         for (int mask_y = (1<<k)-1; mask_y < (1<<n); mask_y = next_comb(mask_y))
@@ -64,9 +65,32 @@ int min_sum_3d_dp(vector <vector <vector <int>>> &c){
     return dp[(1 << n) - 1][(1 << n) - 1];
 }
 
+#define _min(a, b) ((a)<(b))?(a):(b)
+#define _next_comb(v)  (((v) | ((v) - 1)) + 1) | (((~((v) | ((v) - 1)) & -~((v) | ((v) - 1))) - 1) >> (__builtin_ctz((v)) + 1))
+
+int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
+    int n = c.size(), INF = 1e9;    
+    vector <vector <int>> dp(1<<n);
+    for(int i = 0; i < (1<<n); ++i)
+        dp[i].resize(1<<n, INF);
+            
+    dp[0][0] = 0;
+    
+    for (int k = 1; k <= n; ++k)
+        for (int mask_y = (1<<k)-1; mask_y < (1<<n); mask_y = _next_comb(mask_y))
+            for (int mask_z = (1<<k)-1; mask_z < (1<<n); mask_z = _next_comb(mask_z))
+                for(int y = mask_y, i = 0; (i = __builtin_ctz(y)) < n; y ^= 1<<i)
+                     for(int z = mask_z, j = 0; (j = __builtin_ctz(z)) < n; z ^= 1<<j)
+                            dp[mask_y][mask_z] = _min(dp[mask_y][mask_z], dp[mask_y ^ (1<<i)][mask_z ^ (1<<j)] + c[k-1][i][j]);
+                                
+    printf("Minimum: %i\n", dp[(1 << n) - 1][(1 << n) - 1]);
+    return dp[(1 << n) - 1][(1 << n) - 1];
+}
+    
 int main(void){
     int n = 14;
     vector <vector <vector <int>>> c(n);
+    
     srand(time(NULL));
 
     for(int i = 0; i < n; ++i){
@@ -85,7 +109,8 @@ int main(void){
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);
 
     auto s3 = chrono::high_resolution_clock::now();
-    min_sum_3d_dp(c);
+    //min_sum_3d_dp(c);
+    min_sum_3d_dp_opt(c);
     auto s4 = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);
