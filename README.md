@@ -50,7 +50,25 @@ n  T (dp) T (n!)
 ### **min_sum_3d**:
 > Given cube array $c_{ijk}$ of $n^3$ elements, choose $n$ elements each from distinct (xy, yz, xz)-planes so their sum would be minimal.
 
-Update: try optimized version of dp with command (x5 faster on my laptop)
+```
+Store array: dp[2^n - 1][2^n - 1]
+
+for k in 1..n
+    for mask_y in combinations(k)     # C_{n}^{k}
+        for mask_z in combinations(k) # ...
+            for bits in mask_y:       # O(k^2) or O(n^2)
+                for bits in mask_z:
+                    update dp
+```
+
+Solution complexity: depending on the code it can be
+$O(\sum_{k=1}^n (n C_{n}^{k})^2)$ or $O(\sum_{k=1}^n (k C_{n}^{k})^2)$.
+The first one is $n^2 \cdot ( C_{2n}^{n}-1)$ and it can be proved that second one is $n^2 \cdot C_{2n-2}^{n-1}$.
+Both behave like central binomial $\sim 2^{2n}/\sqrt{n}$, however second version performs ~3.9 times less operations.
+
+Result: $O(n \sqrt{n} \cdot 2^{2n})$ time, $O(2^{2n})$ space.
+
+Update: try optimized version of dp for comparison with following command (x5 faster on my laptop)
 ```
 g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
 ```
