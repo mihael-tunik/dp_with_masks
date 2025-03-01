@@ -47,3 +47,7 @@ n  T (dp) T (n!)
 20 0.3s   >>
 30 500s   >>
 ```
+
+### **min_sum_3d**:
+> Given $a_{ijk}$, choose $n$ elements each on distinct xy, yz and xz planes so their sum would be minimal.
+
