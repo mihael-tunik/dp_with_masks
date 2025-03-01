@@ -19,12 +19,12 @@ n  T (dp) T (n!)
 
 Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(n \cdot 2^n)$ space.
 
-### **max_sum**:
+### **min_sum**:
 
 > Given $n$ x $n$ chess board with $n^2$ integer numbers. 
-Place $n$ rooks so they don't attack each other and sum of their positions would be maximal.
+Place $n$ rooks so they don't attack each other and sum of their positions would be minimal.
 
-Actually it can be solved in polynomial time by one of the matching algorithms. It is surprizing because **max_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
+Actually it can be solved in polynomial time by one of the matching algorithms. It is surprizing because **min_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
 
 Anyway, DP solution:
 
@@ -40,7 +40,7 @@ for k in 1..n
 
 Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(2^n)$ space.
 
-Tested (_max\_sum.cpp_):
+Tested (_min\_sum.cpp_):
 ```
 n  T (dp) T (n!)
 12 0.6ms  3s
