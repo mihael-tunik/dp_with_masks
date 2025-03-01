@@ -50,15 +50,20 @@ n  T (dp) T (n!)
 ### **min_sum_3d**:
 > Given cube array $c_{ijk}$ of $n^3$ elements, choose $n$ elements each from distinct (xy, yz, xz)-planes so their sum would be minimal.
 
+This problem is really great and appeared on ICPC 2024. It can be viewed as 3d version of min\_sum, however there is now
+polynomial solution here, at least as I can imagine.
+
 ```
-Store array: dp[2^n - 1][2^n - 1]
+Store array: dp[2^n - 1][2^n - 1], 
+dp[mask_x][mask_y] means optimal choice in c[1...k] where k = size of masks
+when size(mask_x) != size(mask_y) dp state is infeasible
 
 for k in 1..n
     for mask_y in combinations(k)     # C_{n}^{k}
         for mask_z in combinations(k) # ...
-            for bits in mask_y:       # O(k^2) or O(n^2)
-                for bits in mask_z:
-                    update dp
+            for y in mask_y:          # O(k^2) or O(n^2)
+                for z in mask_z:
+                    update dp: dp[mask_y][mask_z] = min(dp[mask_y][mask_z], dp[mask_y ^ 1>>y][mask_z ^ 1>>z] + c[k][y][z])
 ```
 
 Solution complexity: depending on the code it can be
@@ -68,7 +73,7 @@ Both behave like central binomial $\sim 2^{2n}/\sqrt{n}$, however second version
 
 Result: $O(n \sqrt{n} \cdot 2^{2n})$ time, $O(2^{2n})$ space.
 
-Update: try optimized version of dp for comparison with following command (x5 faster on my laptop)
+Update: try optimized version of dp for comparison with following command (x10 faster on my laptop)
 ```
 g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
 ```

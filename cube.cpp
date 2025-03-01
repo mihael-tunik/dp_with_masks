@@ -69,22 +69,29 @@ int min_sum_3d_dp(vector <vector <vector <int>>> &c){
 #define _next_comb(v)  (((v) | ((v) - 1)) + 1) | (((~((v) | ((v) - 1)) & -~((v) | ((v) - 1))) - 1) >> (__builtin_ctz((v)) + 1))
 
 int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
-    int n = c.size(), INF = 1e9;    
-    vector <vector <int>> dp(1<<n);
+    int n = c.size(), INF = 1e9, minimum_sum;    
+    // use C-arrays instead of vectors
+    int **dp = (int **)malloc(sizeof(int *) * (1<<n));
     for(int i = 0; i < (1<<n); ++i)
-        dp[i].resize(1<<n, INF);
-            
+        dp[i] = (int *)malloc(sizeof(int) * (1<<n));
+        
     dp[0][0] = 0;
     
     for (int k = 1; k <= n; ++k)
         for (int mask_y = (1<<k)-1; mask_y < (1<<n); mask_y = _next_comb(mask_y))
-            for (int mask_z = (1<<k)-1; mask_z < (1<<n); mask_z = _next_comb(mask_z))
-                for(int y = mask_y, i = 0; (i = __builtin_ctz(y)) < n; y ^= 1<<i)
+            for (int mask_z = (1<<k)-1; mask_z < (1<<n); mask_z = _next_comb(mask_z))// use C macros
+                for(int y = mask_y, i = 0; (i = __builtin_ctz(y)) < n; y ^= 1<<i)    // iterate only bits equal 1
                      for(int z = mask_z, j = 0; (j = __builtin_ctz(z)) < n; z ^= 1<<j)
-                            dp[mask_y][mask_z] = _min(dp[mask_y][mask_z], dp[mask_y ^ (1<<i)][mask_z ^ (1<<j)] + c[k-1][i][j]);
-                                
-    printf("Minimum: %i\n", dp[(1 << n) - 1][(1 << n) - 1]);
-    return dp[(1 << n) - 1][(1 << n) - 1];
+                         dp[mask_y][mask_z] = _min(dp[mask_y][mask_z], dp[mask_y ^ (1<<i)][mask_z ^ (1<<j)] + c[k-1][i][j]);
+
+    minimum_sum = dp[(1 << n) - 1][(1 << n) - 1];
+    
+    for(int i = 0; i < (1<<n); ++i)
+        free(dp[i]);
+    free(dp);
+    
+    printf("Minimum: %i\n", minimum_sum);
+    return minimum_sum;
 }
     
 int main(void){
