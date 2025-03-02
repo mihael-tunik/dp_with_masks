@@ -88,7 +88,7 @@ for k in 1..n
 Solution complexity: depending on the code it can be
 $O(\sum_{k=1}^n (n C_{n}^{k})^2)$ or $O(\sum_{k=1}^n (k C_{n}^{k})^2)$.
 The first one is $n^2 \cdot ( C_{2n}^{n}-1)$ and it can be proved that second one is $n^2 \cdot C_{2n-2}^{n-1}$.
-Both behave like central binomial $\sim 2^{2n}/\sqrt{n}$, however second version performs ~3.9 times less operations.
+Both behave like central binomial $\sim 2^{2n}/\sqrt{n}$ up to $n^2$ term, however second version performs ~3.9 times less operations.
 
 Result: $O(n \sqrt{n} \cdot 2^{2n})$ time, $O(2^{2n})$ space.
 
