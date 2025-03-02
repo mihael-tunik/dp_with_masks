@@ -1,9 +1,28 @@
 # About
 DP on masks or subset DP is a technique to decrease complexity of algorithms with permutational structure.
 
+### More details:
+In every solution, I prefer to iterate k-subsets in following pattern:
+```
+for (int k = 0; k <= n; ++k) {
+    for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
+        // do something
+    }
+}
+```
+where next\_comb() is a following bit trick
+```
+inline int next_comb(int v) {
+    int t = v | (v - 1);
+    return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
+}
+```
+Of course for practical reasons, one can prefer any convenient way to iterate over k-subsets.
+The main thing is to follow order from subsets of size k to k+1.
+
+### Problem list:
 Here's my collection of nice examples. 
 
-Problem list:
 ### **tsp**:
 > Given distances between cities find closed tour through all of them with minimal length.
 
@@ -25,7 +44,7 @@ Place $n$ rooks so they don't attack each other and sum of their positions would
 
 Actually it can be solved in polynomial time by one of the matching algorithms. It is surprizing because **min_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
 
-Anyway, DP solution:
+Anyway, my first DP solution attempt was the following:
 
 ```
 Store two arrays: dp[2^n - 1], chosen[2^n - 1]
@@ -77,22 +96,3 @@ Update: try optimized version of dp for comparison with following command (x10 f
 ```
 g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
 ```
-
-### More details:
-In every solution, I prefer to iterate k-subsets in following pattern:
-```
-for (int k = 0; k <= n; ++k) {
-    for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
-        // do something
-    }
-}
-```
-where next\_comb() is a following bit trick
-```
-inline int next_comb(int v) {
-    int t = v | (v - 1);
-    return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
-}
-```
-Of course for practical reasons, one can prefer any convenient way to iterate over k-subsets.
-The main thing is to follow order from subsets of size k to k+1.
