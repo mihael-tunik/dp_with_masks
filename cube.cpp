@@ -72,9 +72,11 @@ int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
     int n = c.size(), INF = 1e9, minimum_sum;    
     // use C-arrays instead of vectors
     int **dp = (int **)malloc(sizeof(int *) * (1<<n));
-    for(int i = 0; i < (1<<n); ++i)
+    for(int i = 0; i < (1<<n); ++i){
         dp[i] = (int *)malloc(sizeof(int) * (1<<n));
-        
+        memset(dp[i], 127, sizeof(int) * (1<<n)); // 0x7f7f7f7f > INF
+    }
+    
     dp[0][0] = 0;
     
     for (int k = 1; k <= n; ++k)
@@ -95,7 +97,7 @@ int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
 }
     
 int main(void){
-    int n = 14;
+    int n = 15;
     vector <vector <vector <int>>> c(n);
     
     srand(time(NULL));
