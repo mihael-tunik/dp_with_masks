@@ -97,7 +97,7 @@ int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
 }
     
 int main(void){
-    int n = 12;
+    int n = 14;
     vector <vector <vector <int>>> c(n);
     
     srand(time(NULL));

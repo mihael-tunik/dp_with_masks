@@ -121,3 +121,11 @@ Update: try optimized version of dp for comparison with following command (x10 f
 ```
 g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
 ```
+
+Tested (_cube.cpp_):
+```
+n/T O(n!^2) O(n^(3/2) 2^2n)
+8    11.3s  0.3ms
+12   >>     0.1s
+14   >>     2s
+```
