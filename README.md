@@ -31,13 +31,13 @@ for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
 }
 ```
 
-### Problem list:
-Here's my collection of nice examples. 
+### Problem list
+Here you can find my collection of nice example tasks. 
 
 ### **tsp**:
 > Given distances between cities find closed tour through all of them with minimal length.
 
-This is NP-hard problem and its DP solution is based on masks.
+This is classic NP-hard problem and its DP solution is based on masks.
 
 ```
 Store one array: dp[n][2^n - 1], minimum path through vertices in mask from k to 0 vertice
