@@ -112,8 +112,26 @@ int min_sum_2d_dp(vector <vector <int>> &a){
     return 0;
 }
 
+// O(n 2^n) time and O(2^n) space
+int min_sum_2d_dp_fast(vector <vector <int>> &a){
+    int n = a.size(), INF = 1e9;
+    
+    vector <int> dp(1<<n, INF);
+    dp[0] = 0;
+
+    for (int k = 1; k <= n; ++k)
+        for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask))
+            for(int i = 0; i < n; ++i)
+                if (mask & (1 << i))
+                    dp[mask] = min(dp[mask], dp[mask ^ (1<<i)] + a[k-1][i]);
+
+    printf("Minimum: %i\n", dp[(1 << n) - 1]);
+    return dp[(1 << n) - 1];
+}
+
+
 int main(void){
-    int n = 12;
+    int n = 23;
     vector <vector <int>> a(n);
     
     srand(time(NULL));
@@ -125,16 +143,17 @@ int main(void){
     }
    
     auto s1 = chrono::high_resolution_clock::now();
-    min_sum_2d_naive(a);
+    //min_sum_2d_naive(a);
     auto s2 = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);     
 
     auto s3 = chrono::high_resolution_clock::now();
-    min_sum_2d_dp(a);
+    //min_sum_2d_dp(a);
+    min_sum_2d_dp_fast(a);
     auto s4 = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);  
-
+    
     return 0;
 }

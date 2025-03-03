@@ -6,7 +6,11 @@ In every solution, I prefer to iterate k-subsets in following pattern:
 ```
 for (int k = 0; k <= n; ++k) {
     for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
+        
         // do something
+        
+        if(mask == 0) // include k = 0 case
+            break;
     }
 }
 ```
@@ -44,7 +48,7 @@ Place $n$ rooks so they don't attack each other and sum of their positions would
 
 Actually it can be solved in polynomial time by one of the matching algorithms. It is surprizing because **min_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
 
-Anyway, my first DP solution attempt was the following:
+Anyway, my first DP solution attempt was the following (min\_sum\_2d\_dp()):
 
 ```
 Store two arrays: dp[2^n - 1], chosen[2^n - 1]
@@ -58,12 +62,24 @@ for k in 1..n
 
 Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(2^n)$ space.
 
+The second attempt appeared when I realized how to get rid of _chosen[]_ array,
+actually we can fix the order of optimization, so let _dp[mask]_ be the answer for first _k_ rows, where _k_ is number of bits in mask.
+```
+Store one array: dp[2^n - 1]
+
+for k in 1..n
+    for mask in combinations(k)
+        choose bit i in mask
+            update dp: dp[mask] = min(dp[mask], dp[mask ^ (1>>i)] + a[k][i])
+```
+Solution complexity is better: $O(n \cdot 2^n)$ time, $O(2^n)$ space.
+
 Tested (_min\_sum.cpp_):
 ```
-n  T (dp) T (n!)
-12 0.6ms  3s
-20 0.3s   >>
-30 500s   >>
+n/T (n!) O(n^2 2^n) O(n 2^n) 
+12  3s   0.6ms      0.5ms
+20  >>   0.3s       40ms
+30  >>   500s       61s
 ```
 
 ### **min_sum_3d**:
@@ -91,6 +107,7 @@ The first one is $n^2 \cdot ( C_{2n}^{n}-1)$ and it can be proved that second on
 Both behave like central binomial $\sim 2^{2n}/\sqrt{n}$ up to $n^2$ term, however second version performs ~3.9 times less operations.
 
 Result: $O(n \sqrt{n} \cdot 2^{2n})$ time, $O(2^{2n})$ space.
+For comparison, naive solution runs in $O((n!)^2)$ time.
 
 Update: try optimized version of dp for comparison with following command (x10 faster on my laptop)
 ```
