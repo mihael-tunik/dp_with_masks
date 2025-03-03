@@ -39,12 +39,22 @@ Here's my collection of nice examples.
 
 This is NP-hard problem and its DP solution is based on masks.
 
+```
+Store one array: dp[n][2^n - 1], minimum path through vertices in mask from k to 0 vertice
+
+for k in 1..n
+    for mask in combinations(k)
+        for i in 1..n
+            choose bit j in mask
+                update dp: dp[i][mask] = min(dp[i][mask], dp[j][mask ^ (1>>j)] + a[j][i])
+```
+
 Tested (_tsp.cpp_):
 ```
-n/T (n!) O(n^2 2^n)
-12  7s   1ms
-20  >>   0.25s
-25  >>   14s 
+n/T O(n!) O(n^2 2^n)
+12   7s   1ms
+20   >>   0.25s
+25   >>   14s 
 ```
 
 Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(n \cdot 2^n)$ space.
@@ -84,10 +94,10 @@ Solution complexity is better: $O(n \cdot 2^n)$ time, $O(2^n)$ space.
 
 Tested (_min\_sum.cpp_):
 ```
-n/T (n!) O(n^2 2^n) O(n 2^n) 
-12  3s   0.6ms      0.5ms
-20  >>   0.3s       40ms
-30  >>   500s       61s
+n/T O(n!) O(n^2 2^n) O(n 2^n) 
+12   3s   0.6ms      0.5ms
+20   >>   0.3s       40ms
+30   >>   500s       61s
 ```
 
 ### **min_sum_3d**:
