@@ -1,8 +1,8 @@
 # About
 DP on masks or subset DP is a technique to decrease complexity of algorithms with permutational structure.
 
-### More details:
-In every solution, I prefer to iterate k-subsets in following pattern:
+### More programming details:
+1. In every solution, I prefer to iterate k-subsets in following pattern:
 ```
 for (int k = 0; k <= n; ++k) {
     for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
@@ -14,7 +14,7 @@ for (int k = 0; k <= n; ++k) {
     }
 }
 ```
-where next\_comb() is a following bit trick
+2. Here next\_comb() is a following bit trick
 ```
 inline int next_comb(int v) {
     int t = v | (v - 1);
@@ -23,6 +23,13 @@ inline int next_comb(int v) {
 ```
 Of course for practical reasons, one can prefer any convenient way to iterate over k-subsets.
 The main thing is to follow order from subsets of size k to k+1.
+
+3. When I need to iterate bits in mask I use this code snippet:
+```
+for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
+   // do something with bit number j in mask
+}
+```
 
 ### Problem list:
 Here's my collection of nice examples. 
@@ -34,9 +41,10 @@ This is NP-hard problem and its DP solution is based on masks.
 
 Tested (_tsp.cpp_):
 ```
-n  T (dp) T (n!)
-12 1ms    7s
-20 0.7s   >>
+n/T (n!) O(n^2 2^n)
+12  7s   1ms
+20  >>   0.25s
+25  >>   14s 
 ```
 
 Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(n \cdot 2^n)$ space.

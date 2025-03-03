@@ -87,16 +87,52 @@ int tsp_dp(vector <vector <int>> &a){
     dp[0][0] = 0;
     
     for (int k = 1; k <= n; ++k)
-        for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
+        for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask))
             for(int i = 0; i < n; ++i)
                 for(int j = 0; j < n; ++j)
                     if (mask & (1 << j) && i != j)
-                        dp[i][mask] = min(dp[i][mask], dp[j][mask ^ (1 << j)] + a[j][i]);
+                        dp[i][mask] = min(dp[i][mask], dp[j][mask ^ (1 << j)] + a[j][i]);    
+   
+    min_path = dp[0][(1<<n) - 1];
 
-            if(mask == 0)
-                break;
-        }
+    vector <int> argmin(n, -1);
+    int mask = (1<<n)-1, state, index = 0;
+
+    argmin[0] = index;
+
+    for(int k = 1; k < n; ++k)
+        for(int i = 0; i < n; ++i)
+            if (mask & (1 << i)){ 
+                state = mask & ~(1 << i);                
+                if(dp[i][state] + a[i][index] == dp[index][mask]){                     
+                     index = i, mask = state;
+                     argmin[k] = index;
+                     break;
+                }
+            }
+
+    log(min_path, argmin, a);
+    return 0;
+}
+
+#define _min(a, b) ((a)<(b))?(a):(b)
+#define _next_comb(v)  (((v) | ((v) - 1)) + 1) | (((~((v) | ((v) - 1)) & -~((v) | ((v) - 1))) - 1) >> (__builtin_ctz((v)) + 1))
+
+int tsp_dp_opt(vector <vector <int>> &a){
+    int n = a.size(), min_path = INF;    
+    vector <vector<int>> dp(n);
     
+    for (int k = 0; k < n; ++k)
+       dp[k].resize((1 << n), INF);
+    
+    //dp[k][mask] - minimum path through vertices in mask from k to 0 vertice
+    dp[0][0] = 0;
+    
+    for (int k = 1; k <= n; ++k)
+        for (int mask = (1<<k)-1; mask < (1<<n); mask = _next_comb(mask))
+            for(int i = 0; i < n; ++i)
+                for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) 
+                    dp[i][mask] = _min(dp[i][mask], dp[j][mask ^ (1 << j)] + a[j][i]);   
    
     min_path = dp[0][(1<<n) - 1];
 
@@ -134,13 +170,14 @@ int main(void){
             a[j][i] = a[i][j] = 1 + rand() % 50;
    
     auto s1 = chrono::high_resolution_clock::now();
-    tsp_naive(a);
+    //tsp_naive(a);
+    //tsp_dp(a);
     auto s2 = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);     
 
     auto s3 = chrono::high_resolution_clock::now();
-    tsp_dp(a);
+    tsp_dp_opt(a);
     auto s4 = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);  
