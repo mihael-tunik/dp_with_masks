@@ -103,6 +103,8 @@ n/T O(n!) O(n^2 2^n) O(n 2^n)
 ### **min_sum_3d**:
 > Given cube array $c_{ijk}$ of $n^3$ elements, choose $n$ elements each from distinct (xy, yz, xz)-planes so their sum would be minimal.
 
+<img src="min_sum_3d.svg" alt="drawing" width="50%"/>
+
 This problem is really great and appeared on ICPC 2024. It can be viewed as 3d version of min\_sum, however there is no
 polynomial solution here, at least as I can imagine.
 
