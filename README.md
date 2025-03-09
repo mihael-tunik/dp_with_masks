@@ -40,7 +40,7 @@ Here you can find my collection of nice example tasks.
 This is classic NP-hard problem and its DP solution is based on masks.
 
 ```
-Store one array: dp[n][2^n - 1], minimum path through vertices in mask from k to 0 vertice
+Store one array: dp[n][2^n], minimum path through vertices in mask from k to 0 vertice
 
 for k in 1..n
     for mask in combinations(k)
@@ -69,7 +69,7 @@ Actually it can be solved in polynomial time by one of the matching algorithms. 
 Anyway, my first DP solution attempt was the following (min\_sum\_2d\_dp()):
 
 ```
-Store two arrays: dp[2^n - 1], chosen[2^n - 1]
+Store two arrays: dp[2^n], chosen[2^n]
 
 for k in 1..n
     for mask in combinations(k)
@@ -109,7 +109,7 @@ This problem is really great and appeared on ICPC 2024. It can be viewed as 3d v
 polynomial solution here, at least as I can imagine.
 
 ```
-Store array: dp[2^n - 1][2^n - 1], 
+Store array: dp[2^n][2^n], 
 dp[mask_x][mask_y] means optimal choice in c[1...k] where k = size of masks
 when size(mask_x) != size(mask_y) dp state is infeasible
 
@@ -141,3 +141,9 @@ n/T O(n!^2) O(n^(3/2) 2^2n)
 12   >>     0.1s
 14   >>     2s
 ```
+
+It is also interesting how memory consumption works for this problem.
+Note, that _dp[]_ array is sparse. See example for $n=5$:
+<img src="min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
+
+In fact, fraction of used array elements decrease as $\sim \frac{1}{sqrt(\pi) n}$.
