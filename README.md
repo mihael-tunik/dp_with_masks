@@ -83,7 +83,7 @@ Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(2^n)$ space.
 The second attempt appeared when I realized how to get rid of _chosen[]_ array,
 actually we can fix the order of optimization, so let _dp[mask]_ be the answer for first _k_ rows, where _k_ is number of bits in mask.
 ```
-Store one array: dp[2^n - 1]
+Store one array: dp[2^n]
 
 for k in 1..n
     for mask in combinations(k)
@@ -147,4 +147,4 @@ Note, that _dp[]_ array is sparse. See example for $n=5$:
 
 <img src="min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
-In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt(\pi) n}$.
+In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}$.
