@@ -147,4 +147,4 @@ Note, that _dp[]_ array is sparse. See example for $n=5$:
 
 <img src="min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
-In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}$.
+In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$.
