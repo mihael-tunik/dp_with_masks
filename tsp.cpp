@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <string.h>
 #include <set>
 
 #include <chrono>
@@ -121,10 +122,9 @@ int tsp_dp(vector <vector <int>> &a){
 int tsp_dp_opt(vector <vector <int>> &a){
     int n = a.size(), min_path = INF;    
     vector <vector<int>> dp(n);
-    
     for (int k = 0; k < n; ++k)
        dp[k].resize((1 << n), INF);
-    
+
     //dp[k][mask] - minimum path through vertices in mask from k to 0 vertice
     dp[0][0] = 0;
     
@@ -156,8 +156,18 @@ int tsp_dp_opt(vector <vector <int>> &a){
     return 0;
 }
 
+void profile(int (*_tsp)(vector <vector <int>> &), vector <vector <int>> a){
+    std::chrono::high_resolution_clock::time_point start, stop;
+
+    start = chrono::high_resolution_clock::now();
+    (*_tsp)(a);
+    stop = chrono::high_resolution_clock::now();
+    
+    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
+}
+
 int main(void){
-    int n = 12;
+    int n = 25;
     vector <vector <int>> a(n);
     
     srand(time(NULL));
@@ -169,18 +179,9 @@ int main(void){
         for(int j = i+1; j < n; ++j)
             a[j][i] = a[i][j] = 1 + rand() % 50;
    
-    auto s1 = chrono::high_resolution_clock::now();
-    //tsp_naive(a);
-    //tsp_dp(a);
-    auto s2 = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);     
-
-    auto s3 = chrono::high_resolution_clock::now();
-    tsp_dp_opt(a);
-    auto s4 = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);  
+    //profile(tsp_naive, a);
+    //profile(&tsp_dp, a);
+    profile(&tsp_dp_opt, a);
 
     return 0;
 }
