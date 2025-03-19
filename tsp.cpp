@@ -157,7 +157,7 @@ int tsp_dp_opt(vector <vector <int>> &a){
 }
 
 int main(void){
-    int n = 25;
+    int n = 10;
     vector <vector <int>> a(n);
     
     srand(time(NULL));
@@ -169,8 +169,8 @@ int main(void){
         for(int j = i+1; j < n; ++j)
             a[j][i] = a[i][j] = 1 + rand() % 50;
    
-    //profile(tsp_naive, a);
-    //profile(&tsp_dp, a);
+    profile(tsp_naive, a);
+    profile(&tsp_dp, a);
     profile(&tsp_dp_opt, a);
 
     return 0;

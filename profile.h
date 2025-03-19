@@ -11,13 +11,15 @@
 
 using namespace std;
 
-void profile(int (*_tsp)(vector <vector <int>> &), vector <vector <int>> a);
+template <typename T>
+void profile(int (*_func)(T &), T a);
 
-void profile(int (*_tsp)(vector <vector <int>> &), vector <vector <int>> a){
+template <typename T>
+void profile(int (*_func)(T &), T a){
     std::chrono::high_resolution_clock::time_point start, stop;
 
     start = chrono::high_resolution_clock::now();
-    (*_tsp)(a);
+    (*_func)(a);
     stop = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
