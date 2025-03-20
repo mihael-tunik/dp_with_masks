@@ -3,6 +3,7 @@
 #include <vector>
 #include <chrono>
 #include <cstring>
+#include "profile.h"
 
 using namespace std;
 
@@ -45,6 +46,26 @@ inline int next_comb(int v) {
     return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
 }
 
+void log_table(vector <vector <int>> &dp){
+    int n = dp.size(), INF = 1e9;
+    int num = 0, inf_cnt = 0;
+
+    for(int i = 0; i < n; ++i){
+        for(int j = 0; j < n; ++j){
+            if(dp[i][j] == INF){
+                printf(" inf  ");
+                inf_cnt += 1;
+            }else{
+                printf(" %3i  ", dp[i][j]);
+                num += 1;
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+    printf("%i %i \n", num, num + inf_cnt);
+}
+
 int min_sum_3d_dp(vector <vector <vector <int>>> &c){
     int n = c.size(), INF = 1e9;
     vector <vector <int>> dp(1<<n);
@@ -61,6 +82,8 @@ int min_sum_3d_dp(vector <vector <vector <int>>> &c){
                         if ( (mask_y & (1<<i)) && (mask_z & (1<<j)) )
                             dp[mask_y][mask_z] = min(dp[mask_y][mask_z], dp[mask_y ^ (1 << i)][mask_z ^ (1 << j)] + c[k-1][i][j]);
 
+    //log_table(dp);
+    
     printf("Minimum: %i\n", dp[(1 << n) - 1][(1 << n) - 1]);
     return dp[(1 << n) - 1][(1 << n) - 1];
 }
@@ -71,18 +94,21 @@ int min_sum_3d_dp(vector <vector <vector <int>>> &c){
 int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
     int n = c.size(), INF = 1e9, minimum_sum;    
     // use C-arrays instead of vectors
+    //int *next_comb_table = (int *)malloc(sizeof(int) * (1<<n));
     int **dp = (int **)malloc(sizeof(int *) * (1<<n));
+
     for(int i = 0; i < (1<<n); ++i){
         dp[i] = (int *)malloc(sizeof(int) * (1<<n));
         memset(dp[i], 127, sizeof(int) * (1<<n)); // 0x7f7f7f7f > INF
+        //next_comb_table[i] = _next_comb(i);
     }
     
     dp[0][0] = 0;
     
     for (int k = 1; k <= n; ++k)
         for (int mask_y = (1<<k)-1; mask_y < (1<<n); mask_y = _next_comb(mask_y))
-            for (int mask_z = (1<<k)-1; mask_z < (1<<n); mask_z = _next_comb(mask_z))// use C macros
-                for(int y = mask_y, i = 0; (i = __builtin_ctz(y)) < n; y ^= 1<<i)    // iterate only bits equal 1
+            for (int mask_z = (1<<k)-1; mask_z < (1<<n); mask_z = _next_comb(mask_z)) // use C macros
+                for(int y = mask_y, i = 0; (i = __builtin_ctz(y)) < n; y ^= 1<<i)     // iterate only bits equal 1
                      for(int z = mask_z, j = 0; (j = __builtin_ctz(z)) < n; z ^= 1<<j)
                          dp[mask_y][mask_z] = _min(dp[mask_y][mask_z], dp[mask_y ^ (1<<i)][mask_z ^ (1<<j)] + c[k-1][i][j]);
 
@@ -91,13 +117,14 @@ int min_sum_3d_dp_opt(vector <vector <vector <int>>> &c){
     for(int i = 0; i < (1<<n); ++i)
         free(dp[i]);
     free(dp);
-    
+    //free(next_comb_table);
+
     printf("Minimum: %i\n", minimum_sum);
     return minimum_sum;
 }
     
 int main(void){
-    int n = 14;
+    int n = 10;
     vector <vector <vector <int>>> c(n);
     
     srand(time(NULL));
@@ -111,17 +138,10 @@ int main(void){
         }
     }
    
-    auto s1 = chrono::high_resolution_clock::now();
-    //min_sum_3d_naive(c);
-    auto s2 = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);
 
-    auto s3 = chrono::high_resolution_clock::now();
-    //min_sum_3d_dp(c);
-    min_sum_3d_dp_opt(c);
-    auto s4 = chrono::high_resolution_clock::now();
+    //profile(min_sum_3d_naive, c);
+    profile(min_sum_3d_dp, c);
+    profile(min_sum_3d_dp_opt, c);
     
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);
     return 0;
 }

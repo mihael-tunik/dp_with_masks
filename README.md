@@ -34,6 +34,12 @@ for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
 ### Problem list
 Here you can find my collection of nice example tasks. 
 
+```
+g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
+g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions tsp.cpp -o tsp
+g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions min_sum.cpp -o min_sum
+```
+
 ### **tsp**:
 > Given distances between cities find closed tour through all of them with minimal length.
 
@@ -128,11 +134,6 @@ Both behave like central binomial $\sim 2^{2n}/\sqrt{n}$ up to $n^2$ term, howev
 
 Result: $O(n \sqrt{n} \cdot 2^{2n})$ time, $O(2^{2n})$ space.
 For comparison, naive solution runs in $O((n!)^2)$ time.
-
-Update: try optimized version of dp for comparison with following command (x10 faster on my laptop)
-```
-g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
-```
 
 Tested (_cube.cpp_):
 ```

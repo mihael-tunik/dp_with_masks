@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <chrono>
+#include "profile.h"
 
 using namespace std;
 
@@ -142,18 +143,9 @@ int main(void){
             a[i][j] = 1 + rand() % 50;
     }
    
-    auto s1 = chrono::high_resolution_clock::now();
-    //min_sum_2d_naive(a);
-    auto s2 = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);     
+    //profile(min_sum_2d_naive, a);
+    profile(min_sum_2d_dp, a);
+    profile(min_sum_2d_dp_fast, a);
 
-    auto s3 = chrono::high_resolution_clock::now();
-    //min_sum_2d_dp(a);
-    min_sum_2d_dp_fast(a);
-    auto s4 = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);  
-    
     return 0;
 }

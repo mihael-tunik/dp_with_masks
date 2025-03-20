@@ -169,7 +169,7 @@ int main(void){
         for(int j = i+1; j < n; ++j)
             a[j][i] = a[i][j] = 1 + rand() % 50;
    
-    profile(tsp_naive, a);
+    profile(&tsp_naive, a);
     profile(&tsp_dp, a);
     profile(&tsp_dp_opt, a);
 
