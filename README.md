@@ -3,42 +3,35 @@ DP on masks or subset DP is a technique to decrease complexity of algorithms wit
 
 ### More programming details:
 1. In every solution, I prefer to iterate k-subsets in following pattern:
-```
+```cpp
 for (int k = 0; k <= n; ++k) {
     for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
-        
         // do something
-        
-        if(mask == 0) // include k = 0 case
-            break;
     }
 }
 ```
+This code traverse subsets in order of their sizes and have asymptotics $O(2^n)$.
+
 2. Here next\_comb() is a following bit trick
-```
+```cpp
 inline int next_comb(int v) {
     int t = v | (v - 1);
     return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
 }
 ```
-Of course for practical reasons, one can prefer any convenient way to iterate over k-subsets.
-The main thing is to follow order from subsets of size k to k+1.
+For practical reasons, one can prefer any convenient way to iterate over k-subsets.
+The main thing is to follow the order from subsets of size k to k+1.
 
-3. When I need to iterate bits in mask I use this code snippet:
-```
+3. When I need to iterate bits in mask I can use this code snippet:
+```cpp
 for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
    // do something with bit number j in mask
 }
 ```
+This is somewhat faster than to check every bit.
 
 ### Problem list
 Here you can find my collection of nice example tasks. 
-
-```
-g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions cube.cpp -o cube
-g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions tsp.cpp -o tsp
-g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions min_sum.cpp -o min_sum
-```
 
 ### **tsp**:
 > Given distances between cities find closed tour through all of them with minimal length.
@@ -70,7 +63,8 @@ Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(n \cdot 2^n)$ space.
 > Given $n$ x $n$ chess board with $n^2$ integer numbers. 
 Place $n$ rooks so they don't attack each other and sum of their positions would be minimal.
 
-Actually it can be solved in polynomial time by one of the matching algorithms. It is surprizing because **min_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
+Actually it can be solved in polynomial time by one of the matching algorithms. 
+It is surprizing because **min_sum** and **tsp** look so similar (given some matrix, need to find certain permutation of indexes).
 
 Anyway, my first DP solution attempt was the following (min\_sum\_2d\_dp()):
 
