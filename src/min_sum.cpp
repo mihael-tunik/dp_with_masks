@@ -126,7 +126,20 @@ int min_sum_2d_dp_fast(vector <vector <int>> &a){
                 if (mask & (1 << i))
                     dp[mask] = min(dp[mask], dp[mask ^ (1<<i)] + a[k-1][i]);
 
-    printf("Minimum: %i\n", dp[(1 << n) - 1]);
+    //printf("Minimum: %i\n", dp[(1 << n) - 1]);
+    int mask = (1 << n) - 1;
+    vector <int> argmin(n,-1);
+
+    for(int k = n; k > 0; --k)
+        for(int i = 0; i < n; ++i){
+            if((mask & (1 << i)) && (dp[mask] == dp[mask ^ (1<<i)] + a[k-1][i])){
+                mask = mask ^ (1<<i);
+                argmin[k - 1] = i;
+                break;
+            } 
+        }
+
+    log(dp[(1<<n) - 1], argmin, a);
     return dp[(1 << n) - 1];
 }
 
