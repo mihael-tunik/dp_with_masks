@@ -100,8 +100,9 @@ n/T O(n!) O(n^2 2^n) O(n 2^n)
 30   >>   500s       61s
 ```
 
-_Update 28/03/25:_ Restore answer from dp table for second version. 
-Polynomial algorithm for _min\_sum_ (based on minimum cost maximum flow). Computed answer for _n=1000_ in 5s on my laptop.
+_Update 28/03/25:_ 
+File _min\_sum\_matching.cpp_ contains mentioned polynomial algorithm for _min\_sum_.
+It is based on *minimum cost maximum flow* and can compute answer for $n = 10^3$ in 5s on my laptop. DP solution is used for stress-test on smaller $n$.
 
 ### **min_sum_3d**:
 > Given cube array $c_{ijk}$ of $n^3$ elements, choose $n$ elements each from distinct (xy, yz, xz)-planes so their sum would be minimal.
