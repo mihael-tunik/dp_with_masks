@@ -80,8 +80,8 @@ for k in 1..n
 
 Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(2^n)$ space.
 
-The second attempt appeared when I realized how to get rid of _chosen[]_ array,
-actually we can fix the order of optimization, so let _dp[mask]_ be the answer for first _k_ rows, where _k_ is number of bits in mask.
+The second attempt appeared when I realized how to get rid of _chosen[]_ array. 
+Actually we can fix the order of optimization, so _dp[mask]_ be the answer for first _k_ rows, where _k_ is number of bits in mask.
 ```
 Store one array: dp[2^n]
 
@@ -114,7 +114,7 @@ polynomial solution here, at least as I can imagine.
 
 ```
 Store array: dp[2^n][2^n], 
-dp[mask_x][mask_y] means optimal choice in c[1...k] where k = size of masks
+dp[mask_x][mask_y] means optimal choice in first _k_ layers of the cube
 when size(mask_x) != size(mask_y) dp state is infeasible
 
 for k in 1..n
@@ -142,7 +142,7 @@ n/T O(n!^2) O(n^(3/2) 2^2n)
 ```
 
 It is also interesting how memory consumption works for this problem.
-Note, that _dp[]_ array is sparse. See example for $n=5$:
+Note, that _dp_ array is sparse. See example for $n=5$:
 
 <img src="img/min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
