@@ -1,35 +1,6 @@
 # About
 DP on masks or subset DP is a technique to decrease complexity of algorithms with permutational structure.
 
-### More programming details:
-1. In every solution, I prefer to iterate k-subsets in following pattern:
-```cpp
-for (int k = 0; k <= n; ++k) {
-    for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
-        // do something
-    }
-}
-```
-This code traverse subsets in order of their sizes and have asymptotics $O(2^n)$.
-
-2. Here next\_comb() is a following bit trick
-```cpp
-inline int next_comb(int v) {
-    int t = v | (v - 1);
-    return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
-}
-```
-For practical reasons, one can prefer any convenient way to iterate over k-subsets.
-The main thing is to follow the order from subsets of size k to k+1.
-
-3. When I need to iterate bits in mask I can use this code snippet:
-```cpp
-for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
-   // do something with bit number j in mask
-}
-```
-This is somewhat faster than to check every bit.
-
 ### Problem list
 Here you can find my collection of nice example tasks. 
 
@@ -147,3 +118,32 @@ Note, that _dp_ array is sparse. See example for $n=5$:
 <img src="img/min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
 In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$.
+
+### More programming details:
+1. In every solution, I prefer to iterate k-subsets in following pattern:
+```cpp
+for (int k = 0; k <= n; ++k) {
+    for (int mask = (1<<k)-1; mask < (1<<n); mask = next_comb(mask)) {
+        // do something
+    }
+}
+```
+This code traverse subsets in order of their sizes and have asymptotics $O(2^n)$.
+
+2. Here next\_comb() is a following bit trick
+```cpp
+inline int next_comb(int v) {
+    int t = v | (v - 1);
+    return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
+}
+```
+For practical reasons, one can prefer any convenient way to iterate over k-subsets.
+The main thing is to follow the order from subsets of size k to k+1.
+
+3. When I need to iterate bits in mask I can use this code snippet:
+```cpp
+for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
+   // do something with bit number j in mask
+}
+```
+This is somewhat faster than to check every bit.
