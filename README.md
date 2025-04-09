@@ -120,7 +120,8 @@ Note, that _dp_ array is sparse. See example for $n=5$:
 In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$.
 
 ### **count_tables**:
-This one is actually quite interesting.
+This one is actually quite interesting. I took this problem from regional OI with subtle modifications.
+
 > Given table of integers, count subtables with sum of elements equal to $s$. 
 Each _subtable_ is made by removing some set of columns and rows.
 
