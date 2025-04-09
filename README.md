@@ -112,46 +112,48 @@ n/T O(n!^2) O(n^(3/2) 2^2n)
 14   >>     2s
 ```
 
-It is also interesting how memory consumption works for this problem.
+It is also interesting to see how memory consumption works for this problem.
 Note, that _dp_ array is sparse. See example for $n=5$:
 
 <img src="img/min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
 In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$.
 
-### **count_tables**
+### **count_tables**:
 This one is actually quite interesting.
 > Given table of integers, count subtables with sum of elements equal to $s$. 
 Each _subtable_ is made by removing some set of columns and rows.
 
+Also, according to statement we need to run in $T=1$ second for table dimensions $1 \leq m, n \leq 15$.
+
 <img src="img/count_tables_with_target_sum.svg" alt="drawing" width="50%"/>
 
-Rows and columns can be removed in arbitrary order (again, permutational structure is right here)
-so bruteforce solution runs in $O(\sum_{1 \leq r \leq n, 1 \leq c \leq m} r! \cdot c!)$ 
+Okay, let us start from something: 
+rows and columns can be removed in arbitrary order (again, permutational structure is right here)
+so bruteforce solution would run in $O(\sum_{1 \leq r \leq n, 1 \leq c \leq m} r! \cdot c!)$ 
 (if we check any sequence of moves up to any depth).
 
 We certainly can do better, note that order of operations is not significant.
-Straight bruteforce of subsets give us $O(mn \cdot 2^{m + n})$ solution.
+Straightforward bruteforce of subsets give us $O(mn \cdot 2^{m + n})$ solution.
 
-However, according to statement we need to run in $T=1$ second for table dimensions $1 \leq m, n \leq 15$.
 One can check, that second solution (if carefully designed) runs in >30 seconds, which is sad.
 
-Okay, we need x30 speed up, adventure on 15 minutes, let's go.
+And now we just need x30 speed up, adventure on 15 minutes, let's go.
 
 Our first step is to memoize everything, in a way to remove $m \cdot n$ factor from complexity.
 Submasks dp works like a charm for this task with the _key transition_:
 
-$$dp[X][Y] = dp[X / i][Y / j] + dp[i][Y / j] + dp[X / i][j] + dp[i][j]$$
+$$dp[X][Y] = dp[X / i][Y / j] + dp[i][Y / j] + dp[X / i][j] + dp[i][j],$$
 
-here $i, j$ corresponds to _any_ pair of set bits in masks $X, Y$.
-We made it up to $O(2^{m + n})$, such version is fine but struggles to run less than 5s on maxtest.
+where $i, j$ corresponds to _any_ pair of set bits in masks $X, Y$.
+We made it up to $O(2^{m + n})$, such version is fine but still struggles to run less than 5s on maxtest.
 
 Second step is to go for _meet in the middle_ solution. Divide one of the dimensions (say columns) in two halves and then
-not only memoize states in dp array, but also memoize in std::map number of occurences of sums for subset choices on pivot dimension (which is rows):
+not only memoize states in dp array, but also memoize number of occurences of sums for subset choices on pivot dimension (which is rows):
 
 $$count = \sum_X map_L[X][s] \cdot map_R[X][target - s]$$
 
-Since we use map it's a little tricky to estimate resulting complexity.
+Since I used std::map for occurences counting it's a little tricky to estimate resulting complexity.
 I think it should be $O(\log(2^{\frac{m}{2}}) 2^{\frac{m}{2} + n}) = O(\frac{m}{2} \cdot 2^{\frac{m}{2} + n})$ since
 there should be at most $2^{\frac{m}{2}}$ different sums for each dp row and search/insertion is logarithmic.
 
