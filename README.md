@@ -140,13 +140,17 @@ Okay, we need x30 speed up, adventure on 15 minutes, let's go.
 
 Our first step is to memoize everything, in a way to remove $m \cdot n$ factor from complexity.
 Submasks dp works like a charm for this task with the _key transition_:
+
 $$dp[X][Y] = dp[X / i][Y / j] + dp[i][Y / j] + dp[X / i][j] + dp[i][j]$$
+
 here $i, j$ corresponds to _any_ pair of set bits in masks $X, Y$.
 We made it up to $O(2^{m + n})$, such version is fine but struggles to run less than 5s on maxtest.
 
 Second step is to go for _meet in the middle_ solution. Divide one of the dimensions (say columns) in two halves and then
 not only memoize states in dp array, but also memoize in std::map number of occurences of sums for subset choices on pivot dimension (which is rows):
+
 $$count = \sum_X map_L[X][s] \cdot map_R[X][target - s]$$
+
 Since we use map it's a little tricky to estimate resulting complexity.
 I think it should be $O(\log(2^{\frac{m}{2}}) 2^{\frac{m}{2} + n}) = O(\frac{m}{2} \cdot 2^{\frac{m}{2} + n})$ since
 there should be at most $2^{\frac{m}{2}}$ different sums for each dp row and search/insertion is logarithmic.
