@@ -1,5 +1,7 @@
 # About
-DP on masks or subset DP is a technique to decrease complexity of algorithms with permutational structure.
+**DP on masks** or subset DP is a technique to speed up certain algorithms of combinatorial optimization.
+Typically it works for problems where exists transition _from permutations to subsets_.
+Also similar constructions work where it is necessary to maintain precomputed functions over subsets (e.g. sum over subsets DP). 
 
 ### Problem list
 Here you can find my collection of nice example tasks. 
@@ -7,7 +9,7 @@ Here you can find my collection of nice example tasks.
 ### **tsp**:
 > Given distances between cities find closed tour through all of them with minimal length.
 
-This is classic NP-hard problem and its DP solution is based on masks.
+This is classic NP-hard problem and its DP solution known as Bellman–Held–Karp algorithm is based on submask memoization.
 
 ```
 Store one array: dp[n][2^n], minimum path through vertices in mask from k to 0 vertice
@@ -16,7 +18,7 @@ for k in 1..n
     for mask in combinations(k)
         for i in 1..n
             choose bit j in mask
-                update dp: dp[i][mask] = min(dp[i][mask], dp[j][mask ^ (1>>j)] + a[j][i])
+                dp[i][mask] = min(dp[i][mask], dp[j][mask ^ (1>>j)] + a[j][i])
 ```
 
 Tested (_tsp.cpp_):
@@ -53,6 +55,7 @@ Solution complexity: $O(n^2 \cdot 2^n)$ time, $O(2^n)$ space.
 
 The second attempt appeared when I realized how to get rid of _chosen[]_ array. 
 Actually we can fix the order of optimization, so _dp[mask]_ be the answer for first _k_ rows, where _k_ is number of bits in mask.
+
 ```
 Store one array: dp[2^n]
 
@@ -80,7 +83,7 @@ It is based on *minimum cost maximum flow* and can compute answer for $n = 10^3$
 
 <img src="img/min_sum_3d.svg" alt="drawing" width="50%"/>
 
-This problem is really great and appeared on ICPC 2024. It can be viewed as 3d version of min\_sum, however there is no
+This problem is really great and appeared somewhere on ICPC 2024. It can be viewed as 3d version of min\_sum, however there is no
 polynomial solution here, at least as I can imagine.
 
 ```
@@ -89,8 +92,8 @@ dp[mask_x][mask_y] means optimal choice in first _k_ layers of the cube
 when size(mask_x) != size(mask_y) dp state is infeasible
 
 for k in 1..n
-    for mask_y in combinations(k)     # C_{n}^{k}
-        for mask_z in combinations(k) # ...
+    for mask_y in combinations(k)     # O(C_{n}^{k})
+        for mask_z in combinations(k) # O(C_{n}^{k})
             for y in mask_y:          # O(k^2) or O(n^2)
                 for z in mask_z:
                     update dp: dp[mask_y][mask_z] = min(dp[mask_y][mask_z], dp[mask_y ^ 1>>y][mask_z ^ 1>>z] + c[k][y][z])
@@ -112,27 +115,28 @@ n/T O(n!^2) O(n^(3/2) 2^2n)
 14   >>     2s
 ```
 
-It is also interesting to see how memory consumption works for this problem.
-Note, that _dp_ array is sparse. See example for $n=5$:
+It is also interesting to investigate how memory consumption works for this problem.
+Note, how sparse _dp_ array is. See example for $n=5$:
 
 <img src="img/min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
-In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$.
+In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$. 
+It seems that memory usage here can be decreased. 
 
 ### **count_tables**:
-This one is actually quite interesting. I took this problem from regional OI with subtle modifications.
+I took this problem from regional OI (with subtle modifications).
 
-> Given table of integers, count subtables with sum of elements equal to $s$. 
-Each _subtable_ is made by removing some set of columns and rows.
+> Given table of integers, one can remove rows and columns one by one in any order.
+Count how many different tables with sum of elements equal to $s$ one can get.
 
 Also, according to statement we need to run in $T=1$ second for table dimensions $1 \leq m, n \leq 15$.
 
 <img src="img/count_tables_with_target_sum.svg" alt="drawing" width="50%"/>
 
 Okay, let us start from something: 
-rows and columns can be removed in arbitrary order (again, permutational structure is right here)
-so bruteforce solution would run in $O(\sum_{1 \leq r \leq n, 1 \leq c \leq m} r! \cdot c!)$ 
-(if we check any sequence of moves up to any depth).
+rows and columns can be removed in arbitrary order and so naive bruteforce solution 
+would run in $O(\sum_{1 \leq r \leq n, 1 \leq c \leq m} r! \cdot c!)$ 
+if we check any sequence of moves up to any depth.
 
 We certainly can do better, note that order of operations is not significant.
 Straightforward bruteforce of subsets give us $O(mn \cdot 2^{m + n})$ solution.
@@ -142,7 +146,7 @@ One can check, that second solution (if carefully designed) runs in >30 seconds,
 And now we just need x30 speed up, adventure on 15 minutes, let's go.
 
 Our first step is to memoize everything, in a way to remove $m \cdot n$ factor from complexity.
-Submasks dp works like a charm for this task with the _key transition_:
+Submask memoization technique works here like a charm with the _key transition_:
 
 $$dp[X][Y] = dp[X / i][Y / j] + dp[i][Y / j] + dp[X / i][j] + dp[i][j],$$
 
@@ -185,4 +189,4 @@ for(int y = mask, j = 0; (j = __builtin_ctz(y)) < n; y ^= 1<<j) {
    // do something with bit number j in mask
 }
 ```
-This is somewhat faster than to check every bit.
+Experiments showed, that this is somewhat faster than to check every bit.
