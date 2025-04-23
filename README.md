@@ -7,9 +7,9 @@ Also similar constructions work where it is necessary to maintain precomputed fu
 Here you can find my collection of nice example tasks. 
 
 ### **tsp**:
-> Given distances between cities find closed tour through all of them with minimal length.
+> Given distances between cities. Find closed tour through all of them with minimal length.
 
-This is classic NP-hard problem and its DP solution known as Bellman–Held–Karp algorithm is based on submask memoization.
+This is classic NP-hard problem and its DP solution (known as Bellman–Held–Karp algorithm) is based on submask dynamic programming.
 
 ```
 Store one array: dp[n][2^n], minimum path through vertices in mask from k to 0 vertice
@@ -121,7 +121,7 @@ Note, how sparse _dp_ array is. See example for $n=5$:
 <img src="img/min_sum_3d_dp_32.svg" alt="drawing" width="50%"/>
 
 In fact, fraction of used array elements decrease as $\sim \frac{1}{\sqrt{\pi n}}$. 
-It seems that memory usage here can be decreased. 
+It seems that memory usage here can be optimized. 
 
 ### **count_tables**:
 I took this problem from regional OI (with subtle modifications).
@@ -131,7 +131,7 @@ Count how many different tables with sum of elements equal to $s$ one can get.
 
 Also, according to statement we need to run in $T=1$ second for table dimensions $1 \leq m, n \leq 15$.
 
-<img src="img/count_tables_with_target_sum.svg" alt="drawing" width="50%"/>
+<img src="img/count_tables.svg" alt="drawing" width="50%"/>
 
 Okay, let us start from something: 
 rows and columns can be removed in arbitrary order and so naive bruteforce solution 
